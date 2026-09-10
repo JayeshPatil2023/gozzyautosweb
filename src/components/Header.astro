@@ -1,0 +1,50 @@
+---
+export interface Props {
+	siteTitle: string;
+	siteLogo?: { url?: string; alt?: string };
+	menu?: { items: Array<{ url: string; label: string; target?: string }> };
+	currentPath: string;
+}
+
+const { siteTitle, siteLogo, menu, currentPath } = Astro.props;
+---
+
+<!-- ── Header ───────────────────────────────────────── -->
+<header class="site-header">
+	<div class="container header-inner">
+		<!-- Logo -->
+		<a href="/" class="site-logo" id="site-logo-link">
+			{siteLogo?.url
+				? <img src={siteLogo.url} alt={siteLogo.alt || siteTitle} style="height:40px;width:auto;" />
+				: (
+					<>
+						<span class="logo-icon">🚗</span>
+						<span class="logo-text">
+							<span class="logo-accent">Gozzy</span> Autos
+						</span>
+					</>
+				)
+			}
+		</a>
+
+		<!-- Primary Navigation -->
+		<nav class="primary-nav" aria-label="Primary navigation">
+			{menu?.items.map((item) => (
+				<a
+					href={item.url}
+					target={item.target}
+					class={currentPath === item.url ? "active" : ""}
+				>
+					{item.label}
+				</a>
+			))}
+		</nav>
+
+		<!-- Header CTA -->
+		<div class="header-cta">
+			<a href="/vehicles" class="btn btn-primary" id="header-browse-btn">
+				Browse Cars
+			</a>
+		</div>
+	</div>
+</header>

@@ -1,0 +1,9 @@
+---
+import { getCustomScripts } from "../utils/scripts";
+
+const { footerScript } = await getCustomScripts();
+---
+
+{footerScript && (
+	<Fragment set:html={footerScript} />
+)}

@@ -1,0 +1,570 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "Gozzy Autos",
+		"description": "Gozzy Autos — Find Your Perfect Drive",
+		"author": "Gozzy Autos"
+	},
+	"settings": {
+		"title": "Gozzy Autos",
+		"tagline": "Find Your Perfect Drive"
+	},
+	"collections": [
+		{
+			"slug": "vehicles",
+			"label": "Vehicles",
+			"labelSingular": "Vehicle",
+			"supports": [
+				"drafts",
+				"revisions",
+				"search",
+				"seo"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "featured_image",
+					"label": "Featured Image",
+					"type": "image"
+				},
+				{
+					"slug": "make",
+					"label": "Make (Brand)",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "model",
+					"label": "Model",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "year",
+					"label": "Year",
+					"type": "integer",
+					"required": true
+				},
+				{
+					"slug": "price",
+					"label": "Price (₹)",
+					"type": "number"
+				},
+				{
+					"slug": "mileage",
+					"label": "Mileage (km)",
+					"type": "number"
+				},
+				{
+					"slug": "fuel_type",
+					"label": "Fuel Type",
+					"type": "string"
+				},
+				{
+					"slug": "transmission",
+					"label": "Transmission",
+					"type": "string"
+				},
+				{
+					"slug": "short_description",
+					"label": "Short Description",
+					"type": "text",
+					"searchable": true
+				},
+				{
+					"slug": "is_featured",
+					"label": "Show on Home Page",
+					"type": "boolean"
+				}
+			]
+		},
+		{
+			"slug": "pages",
+			"label": "Pages",
+			"labelSingular": "Page",
+			"urlPattern": "/{slug}",
+			"supports": [
+				"drafts",
+				"revisions",
+				"search",
+				"seo"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Page Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "subtitle",
+					"label": "Page Subtitle / Tagline",
+					"type": "string"
+				},
+				{
+					"slug": "sections",
+					"label": "Page Sections (Section Builder)",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "section_tag",
+								"label": "Section Tag / Badge",
+								"type": "string"
+							},
+							{
+								"slug": "section_title",
+								"label": "Section Heading Title",
+								"type": "string",
+								"required": false
+							},
+							{
+								"slug": "section_layout",
+								"label": "Section Layout Style",
+								"type": "select",
+								"options": [
+									"hero",
+									"full-width",
+									"split-image-right",
+									"split-image-left",
+									"cta-banner"
+								]
+							},
+							{
+								"slug": "section_width",
+								"label": "Container Width Style",
+								"type": "select",
+								"options": [
+									"default",
+									"reading",
+									"narrow",
+									"full"
+								]
+							},
+							{
+								"slug": "content",
+								"label": "Section Content (HTML / Text)",
+								"type": "text"
+							},
+							{
+								"slug": "button_text",
+								"label": "Primary Button Text (Optional)",
+								"type": "string"
+							},
+							{
+								"slug": "button_url",
+								"label": "Primary Button Link (Optional)",
+								"type": "string"
+							},
+							{
+								"slug": "secondary_button_text",
+								"label": "Secondary Button Text (Optional)",
+								"type": "string"
+							},
+							{
+								"slug": "secondary_button_url",
+								"label": "Secondary Button Link (Optional)",
+								"type": "string"
+							},
+							{
+								"slug": "image",
+								"label": "Section Image / Hero Background Image (Optional)",
+								"type": "image"
+							}
+						]
+					}
+				},
+				{
+					"slug": "content",
+					"label": "Fallback Rich Text Content",
+					"type": "portableText",
+					"searchable": true
+				}
+			]
+		},
+		{
+			"slug": "home_page",
+			"label": "Home Page Sections",
+			"labelSingular": "Home Page Section",
+			"supports": [
+				"revisions"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Section Title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "hero_badge",
+					"label": "Hero Badge Text",
+					"type": "string"
+				},
+				{
+					"slug": "hero_bg_image",
+					"label": "Hero Background Image (Optional)",
+					"type": "image"
+				},
+				{
+					"slug": "hero_headline",
+					"label": "Hero Headline Title",
+					"type": "string"
+				},
+				{
+					"slug": "hero_accent_text",
+					"label": "Hero Accent Text",
+					"type": "string"
+				},
+				{
+					"slug": "hero_subheadline",
+					"label": "Hero Subheadline Description",
+					"type": "text"
+				},
+				{
+					"slug": "hero_primary_btn_text",
+					"label": "Primary CTA Button Label",
+					"type": "string"
+				},
+				{
+					"slug": "hero_primary_btn_url",
+					"label": "Primary CTA Button Link",
+					"type": "string"
+				},
+				{
+					"slug": "hero_secondary_btn_text",
+					"label": "Secondary CTA Button Label",
+					"type": "string"
+				},
+				{
+					"slug": "hero_secondary_btn_url",
+					"label": "Secondary CTA Button Link",
+					"type": "string"
+				},
+				{
+					"slug": "stat1_value",
+					"label": "Stat 1 Value (e.g. 50+)",
+					"type": "string"
+				},
+				{
+					"slug": "stat1_label",
+					"label": "Stat 1 Label",
+					"type": "string"
+				},
+				{
+					"slug": "stat2_value",
+					"label": "Stat 2 Value (e.g. 500+)",
+					"type": "string"
+				},
+				{
+					"slug": "stat2_label",
+					"label": "Stat 2 Label",
+					"type": "string"
+				},
+				{
+					"slug": "stat3_value",
+					"label": "Stat 3 Value (e.g. 100%)",
+					"type": "string"
+				},
+				{
+					"slug": "stat3_label",
+					"label": "Stat 3 Label",
+					"type": "string"
+				},
+				{
+					"slug": "vehicles_tag",
+					"label": "Vehicles Section Tagline",
+					"type": "string"
+				},
+				{
+					"slug": "vehicles_title",
+					"label": "Vehicles Section Heading",
+					"type": "string"
+				},
+				{
+					"slug": "vehicles_description",
+					"label": "Vehicles Section Description",
+					"type": "text"
+				},
+				{
+					"slug": "why_tag",
+					"label": "Why Choose Us Tagline",
+					"type": "string"
+				},
+				{
+					"slug": "why_title",
+					"label": "Why Choose Us Heading",
+					"type": "string"
+				},
+				{
+					"slug": "why_description",
+					"label": "Why Choose Us Description",
+					"type": "text"
+				},
+				{
+					"slug": "cta_title",
+					"label": "Bottom CTA Heading",
+					"type": "string"
+				},
+				{
+					"slug": "cta_description",
+					"label": "Bottom CTA Description",
+					"type": "text"
+				},
+				{
+					"slug": "cta_button_text",
+					"label": "Bottom CTA Button Label",
+					"type": "string"
+				},
+				{
+					"slug": "cta_button_url",
+					"label": "Bottom CTA Button Link",
+					"type": "string"
+				}
+			]
+		},
+		{
+			"slug": "custom_scripts",
+			"label": "Custom Scripts (GA4 & Analytics)",
+			"labelSingular": "Custom Script",
+			"supports": [
+				"revisions"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Config Title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "header_script",
+					"label": "Header Script (<head> Code, GA4, GTM)",
+					"type": "text"
+				},
+				{
+					"slug": "footer_script",
+					"label": "Footer Script (Before </body> Code, Tracking)",
+					"type": "text"
+				}
+			]
+		}
+	],
+	"menus": [
+		{
+			"name": "primary",
+			"label": "Primary Navigation",
+			"items": [
+				{
+					"type": "custom",
+					"label": "Home",
+					"url": "/"
+				},
+				{
+					"type": "custom",
+					"label": "Vehicles",
+					"url": "/vehicles"
+				}
+			]
+		}
+	],
+	"content": {
+		"vehicles": [
+			{
+				"id": "vehicle-1",
+				"slug": "maruti-swift-2023",
+				"status": "published",
+				"data": {
+					"title": "Maruti Swift 2023",
+					"make": "Maruti Suzuki",
+					"model": "Swift",
+					"year": 2023,
+					"price": 650000,
+					"mileage": 12000,
+					"fuel_type": "Petrol",
+					"transmission": "Manual",
+					"short_description": "A popular hatchback with excellent fuel efficiency and sporty looks. Perfect for city driving.",
+					"is_featured": true
+				}
+			},
+			{
+				"id": "vehicle-2",
+				"slug": "hyundai-creta-2022",
+				"status": "published",
+				"data": {
+					"title": "Hyundai Creta 2022",
+					"make": "Hyundai",
+					"model": "Creta",
+					"year": 2022,
+					"price": 1200000,
+					"mileage": 25000,
+					"fuel_type": "Diesel",
+					"transmission": "Automatic",
+					"short_description": "Feature-packed SUV with a premium feel, strong performance, and excellent resale value.",
+					"is_featured": true
+				}
+			},
+			{
+				"id": "vehicle-3",
+				"slug": "tata-nexon-2023",
+				"status": "published",
+				"data": {
+					"title": "Tata Nexon 2023",
+					"make": "Tata",
+					"model": "Nexon",
+					"year": 2023,
+					"price": 950000,
+					"mileage": 8000,
+					"fuel_type": "Petrol",
+					"transmission": "Automatic",
+					"short_description": "5-star safety rated compact SUV with a bold design and advanced features.",
+					"is_featured": true
+				}
+			},
+			{
+				"id": "vehicle-4",
+				"slug": "honda-city-2021",
+				"status": "published",
+				"data": {
+					"title": "Honda City 2021",
+					"make": "Honda",
+					"model": "City",
+					"year": 2021,
+					"price": 1050000,
+					"mileage": 40000,
+					"fuel_type": "Petrol",
+					"transmission": "Manual",
+					"short_description": "A timeless sedan known for its reliability, comfortable interiors, and smooth ride quality.",
+					"is_featured": false
+				}
+			},
+			{
+				"id": "vehicle-5",
+				"slug": "mahindra-thar-2022",
+				"status": "published",
+				"data": {
+					"title": "Mahindra Thar 2022",
+					"make": "Mahindra",
+					"model": "Thar",
+					"year": 2022,
+					"price": 1500000,
+					"mileage": 18000,
+					"fuel_type": "Diesel",
+					"transmission": "Manual",
+					"short_description": "Iconic off-road SUV with rugged capability and a cult following. Built for adventure.",
+					"is_featured": true
+				}
+			},
+			{
+				"id": "vehicle-6",
+				"slug": "kia-seltos-2023",
+				"status": "published",
+				"data": {
+					"title": "Kia Seltos 2023",
+					"make": "Kia",
+					"model": "Seltos",
+					"year": 2023,
+					"price": 1350000,
+					"mileage": 5000,
+					"fuel_type": "Petrol",
+					"transmission": "Automatic",
+					"short_description": "Premium compact SUV packed with tech features and a stylish design that turns heads.",
+					"is_featured": true
+				}
+			}
+		],
+		"pages": [
+			{
+				"id": "about",
+				"slug": "about",
+				"status": "published",
+				"data": {
+					"title": "About Gozzy Autos",
+					"subtitle": "Your Trusted Partner for Quality Pre-Owned Vehicles",
+					"sections": [
+						{
+							"section_tag": "Trusted Dealership",
+							"section_title": "About Gozzy Autos",
+							"section_layout": "hero",
+							"content": "Your trusted partner for quality pre-owned vehicles. We believe buying a car should be an exciting, transparent, and hassle-free journey.",
+							"button_text": "Browse Vehicles",
+							"button_url": "/vehicles",
+							"secondary_button_text": "Contact Us",
+							"secondary_button_url": "/contact"
+						},
+						{
+							"section_tag": "Why Choose Us",
+							"section_title": "The Gozzy Autos Advantage",
+							"section_layout": "split-image-right",
+							"content": "<p><strong>150-Point Vehicle Inspection:</strong> Every single car is checked by our certified technicians before being listed.</p><p><strong>Transparent Pricing:</strong> No hidden charges, no surprise fees. What you see is what you pay.</p><p><strong>Complete Documentation:</strong> Smooth RC transfer, clear service history, and verified insurance details guaranteed.</p>"
+						},
+						{
+							"section_tag": "Get In Touch",
+							"section_title": "Ready to Experience Your Dream Drive?",
+							"section_layout": "cta-banner",
+							"content": "Browse our handpicked inventory today or visit our showroom to speak with our automotive experts.",
+							"button_text": "Explore Vehicles Inventory",
+							"button_url": "/vehicles"
+						}
+					]
+				}
+			}
+		],
+		"home_page": [
+			{
+				"id": "home-content",
+				"slug": "home-content",
+				"status": "published",
+				"data": {
+					"title": "Main Home Page Content",
+					"hero_badge": "Trusted Auto Dealership",
+					"hero_headline": "Find Your",
+					"hero_accent_text": "Perfect Drive",
+					"hero_subheadline": "Browse our handpicked collection of quality pre-owned vehicles. Every car is inspected, verified, and ready to drive home today.",
+					"hero_primary_btn_text": "Browse Vehicles",
+					"hero_primary_btn_url": "/vehicles",
+					"hero_secondary_btn_text": "Learn More",
+					"hero_secondary_btn_url": "/about",
+					"stat1_value": "",
+					"stat1_label": "Cars Available",
+					"stat2_value": "500+",
+					"stat2_label": "Happy Customers",
+					"stat3_value": "100%",
+					"stat3_label": "Verified Stock",
+					"vehicles_tag": "Top Picks",
+					"vehicles_title": "Most Searched Vehicles",
+					"vehicles_description": "Our customers love these models. Handpicked for quality, performance, and value.",
+					"why_tag": "Why Choose Us",
+					"why_title": "Your Satisfaction is Our Top Priority",
+					"why_description": "We provide transparent vehicle histories, rigorous multi-point inspections, and easy financing options.",
+					"cta_title": "Ready to Find Your Next Car?",
+					"cta_description": "Browse our full inventory or get in touch with our expert sales team today.",
+					"cta_button_text": "Contact Us Today",
+					"cta_button_url": "/about"
+				}
+			}
+		],
+		"custom_scripts": [
+			{
+				"id": "scripts-main",
+				"slug": "scripts-main",
+				"status": "published",
+				"data": {
+					"title": "Global Header & Footer Scripts",
+					"header_script": "",
+					"footer_script": ""
+				}
+			}
+		]
+	}
+}

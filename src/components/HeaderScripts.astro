@@ -1,0 +1,9 @@
+---
+import { getCustomScripts } from "../utils/scripts";
+
+const { headerScript } = await getCustomScripts();
+---
+
+{headerScript && (
+	<Fragment set:html={headerScript} />
+)}

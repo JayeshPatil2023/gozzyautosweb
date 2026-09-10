@@ -1,0 +1,285 @@
+---
+import { getEmDashEntry, getSeoMeta, decodeSlug, getSiteSettings } from "emdash";
+import { PortableText, Image } from "emdash/ui";
+import Base from "../layouts/Base.astro";
+import { resolveStarterSiteIdentity } from "../utils/site-identity";
+
+const slug = decodeSlug(Astro.params.slug);
+
+if (!slug) {
+	return Astro.redirect("/404");
+}
+
+const { entry: page, cacheHint } = await getEmDashEntry("pages", slug);
+
+if (!page) {
+	return Astro.redirect("/404");
+}
+
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+const { siteTitle } = resolveStarterSiteIdentity(await getSiteSettings());
+
+const seo = getSeoMeta(page, {
+	siteTitle,
+	siteUrl: Astro.url.origin,
+	path: Astro.url.pathname.replace(/\/$/, ""),
+});
+
+const sections = Array.isArray(page.data.sections) ? page.data.sections : [];
+const hasSections = sections.length > 0;
+const hasHeroSection = sections.some((s: any) => s.section_layout === "hero");
+
+// Helper to extract image URL from string, bare ULID, JSON string, or EmDash image media object
+function getImageUrl(image: any): string | null {
+	if (!image) return null;
+
+	let img = image;
+
+	// If it's a string, check if it's a JSON string or URL or bare ID
+	if (typeof img === "string") {
+		const trimmed = img.trim();
+		if (!trimmed) return null;
+
+		if (trimmed.startsWith("{")) {
+			try {
+				img = JSON.parse(trimmed);
+			} catch (e) {
+				// Keep as string if JSON parse fails
+			}
+		} else {
+			if (trimmed.startsWith("/") || trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+				return trimmed;
+			}
+			return `/_emdash/api/media/file/${trimmed}`;
+		}
+	}
+
+	// Handle object shape
+	if (typeof img === "object" && img !== null) {
+		const rawUrl = img.url || img.src || img.path || img.originalUrl || img.previewUrl;
+		if (rawUrl && typeof rawUrl === "string" && rawUrl.trim()) {
+			const u = rawUrl.trim();
+			return (u.startsWith("/") || u.startsWith("http://") || u.startsWith("https://"))
+				? u
+				: `/_emdash/api/media/file/${u}`;
+		}
+
+		// Storage key carries the full filename with extension (e.g. 01JM...png)
+		const storageKey = img.meta?.storageKey || img.storageKey || img.key || img.filename;
+		if (storageKey && typeof storageKey === "string" && storageKey.trim()) {
+			return `/_emdash/api/media/file/${storageKey.trim()}`;
+		}
+
+		const idKey = img.id || img._ref;
+		if (idKey && typeof idKey === "string" && idKey.trim()) {
+			return `/_emdash/api/media/file/${idKey.trim()}`;
+		}
+	}
+
+	return null;
+}
+
+// Helper to determine dynamic container max-width based on admin selection
+function getContainerStyle(widthStyle?: string) {
+	if (widthStyle === "reading") return "max-width: 900px; margin: 0 auto;";
+	if (widthStyle === "narrow") return "max-width: 700px; margin: 0 auto;";
+	if (widthStyle === "full") return "max-width: 100%; padding-left: 0; padding-right: 0; margin: 0 auto;";
+	// "default" or un-specified: standard 1280px container width
+	return "max-width: var(--max-width); margin: 0 auto;";
+}
+---
+
+<Base
+	title={seo.title}
+	pageTitle={seo.ogTitle}
+	description={seo.description}
+	canonical={seo.canonical}
+	content={{ collection: "pages", id: page.data.id, slug }}
+>
+	<!-- Standard Page Header Banner (Hidden if Page uses a Custom Hero Section) -->
+	{!hasHeroSection && (
+		<section class="page-header" style="background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%); padding: 4rem 0 3rem; border-bottom: 1px solid var(--color-border); text-align: center;">
+			<div class="container">
+				<h1 style="font-size: 2.75rem; font-weight: 800; color: var(--color-heading); margin-bottom: 0.75rem;" {...page.edit.title}>
+					{page.data.title}
+				</h1>
+				{page.data.subtitle && (
+					<p style="font-size: 1.25rem; color: var(--color-text-muted); max-width: 680px; margin: 0 auto;" {...page.edit.subtitle}>
+						{page.data.subtitle}
+					</p>
+				)}
+			</div>
+		</section>
+	)}
+
+	{hasSections ? (
+		/* Section-Wise Content Renderer */
+		<div class="page-sections" style="display: flex; flex-direction: column; gap: 2rem; padding: 0 0 4rem;">
+			{sections.map((section: any, index: number) => {
+				const isHero = section.section_layout === "hero";
+				const isCta = section.section_layout === "cta-banner";
+				const isSplitRight = section.section_layout === "split-image-right";
+				const isSplitLeft = section.section_layout === "split-image-left";
+				const containerStyle = getContainerStyle(section.section_width);
+
+				if (isHero) {
+					const heroBgUrl = getImageUrl(section.image);
+					return (
+						<section class="hero" id={`hero-${index}`}>
+							<div
+								class="hero-bg"
+								style={heroBgUrl ? `background: linear-gradient(135deg, rgba(10,12,16,0.92) 0%, rgba(10,12,16,0.65) 50%, rgba(10,12,16,0.9) 100%), url('${heroBgUrl}') center/cover no-repeat;` : undefined}
+							></div>
+							<div class="container">
+								<div class="hero-content">
+									{section.section_tag && (
+										<div class="hero-badge animate-fade-up">
+											{section.section_tag}
+										</div>
+									)}
+									{section.section_title && (
+										<h1 class="animate-fade-up animate-delay-1">
+											{section.section_title}
+										</h1>
+									)}
+									{section.content && (
+										<div class="hero-sub animate-fade-up animate-delay-2" style="max-width: 720px; margin: 0 auto;">
+											<Fragment set:html={section.content} />
+										</div>
+									)}
+									{(section.button_text || section.secondary_button_text) && (
+										<div class="hero-actions animate-fade-up animate-delay-3">
+											{section.button_text && (
+												<a href={section.button_url || "#"} class="btn btn-primary btn-lg">
+													{section.button_text}
+												</a>
+											)}
+											{section.secondary_button_text && (
+												<a href={section.secondary_button_url || "#"} class="btn btn-outline btn-lg">
+													{section.secondary_button_text}
+												</a>
+											)}
+										</div>
+									)}
+								</div>
+							</div>
+						</section>
+					);
+				}
+
+				if (isCta) {
+					return (
+						<section class="section" id={`section-${index}`}>
+							<div class="container" style={containerStyle}>
+								<div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-lg); padding: 3.5rem 2rem; text-align: center; backdrop-filter: blur(10px);">
+									{section.section_tag && (
+										<span class="section-tag" style="margin-bottom: 0.75rem; display: inline-block;">
+											{section.section_tag}
+										</span>
+									)}
+									{section.section_title && (
+										<h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--color-heading);">
+											{section.section_title}
+										</h2>
+									)}
+									{section.content && (
+										<div style="font-size: 1.1rem; color: var(--color-text-muted); max-width: 650px; margin: 0 auto 2rem; line-height: 1.6;">
+											<Fragment set:html={section.content} />
+										</div>
+									)}
+									{section.button_text && (
+										<a href={section.button_url || "#"} class="btn btn-primary btn-lg">
+											{section.button_text}
+										</a>
+									)}
+								</div>
+							</div>
+						</section>
+					);
+				}
+
+				if (isSplitRight || isSplitLeft) {
+					const splitImgUrl = getImageUrl(section.image);
+					return (
+						<section class="section" id={`section-${index}`} style={index % 2 === 1 ? "background: var(--color-surface); padding: 4rem 0; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);" : ""}>
+							<div class="container" style={containerStyle}>
+								<div class="split-section" style={`display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; ${isSplitLeft ? "grid-template-areas: 'img content';" : ""}`}>
+									<div class="split-content" style={isSplitLeft ? "grid-area: content;" : ""}>
+										{section.section_tag && (
+											<span class="section-tag">{section.section_tag}</span>
+										)}
+										{section.section_title && (
+											<h2 style="font-size: 2rem; margin-bottom: 1rem; color: var(--color-heading);">
+												{section.section_title}
+											</h2>
+										)}
+										{section.content && (
+											<div style="color: var(--color-text-muted); line-height: 1.7; margin-bottom: 1.5rem;">
+												<Fragment set:html={section.content} />
+											</div>
+										)}
+										{section.button_text && (
+											<a href={section.button_url || "#"} class="btn btn-primary">
+												{section.button_text}
+											</a>
+										)}
+									</div>
+									<div class="split-image" style={isSplitLeft ? "grid-area: img;" : ""}>
+										{splitImgUrl ? (
+											<img
+												src={splitImgUrl}
+												alt={section.section_title || ""}
+												style="border-radius: var(--radius-md); width: 100%; height: 350px; object-fit: cover;"
+											/>
+										) : (
+											<img
+												src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&q=80"
+												alt={section.section_title || ""}
+												style="border-radius: var(--radius-md); width: 100%; height: 350px; object-fit: cover;"
+											/>
+										)}
+									</div>
+								</div>
+							</div>
+						</section>
+					);
+				}
+
+				/* Full Width Section with Admin-Selectable Container Width */
+				return (
+					<section class="section" id={`section-${index}`} style={index % 2 === 1 ? "background: var(--color-surface); padding: 4rem 0; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);" : ""}>
+						<div class="container" style={containerStyle}>
+							{section.section_tag && (
+								<span class="section-tag">{section.section_tag}</span>
+							)}
+							{section.section_title && (
+								<h2 style="font-size: 2.25rem; margin-bottom: 1.25rem; color: var(--color-heading);">
+									{section.section_title}
+								</h2>
+							)}
+							{section.content && (
+								<div style="font-size: 1.1rem; color: var(--color-text); line-height: 1.8; margin-bottom: section.button_text ? '2rem' : '0';">
+									<Fragment set:html={section.content} />
+								</div>
+							)}
+							{section.button_text && (
+								<div style="margin-top: 1.5rem;">
+									<a href={section.button_url || "#"} class="btn btn-primary">
+										{section.button_text}
+									</a>
+								</div>
+							)}
+						</div>
+					</section>
+				);
+			})}
+		</div>
+	) : (
+		/* Fallback PortableText Rich Text Content */
+		<div class="container" style="max-width: 800px; margin: 0 auto; padding: 4rem 1.5rem;">
+			<article class="prose" style="font-size: 1.1rem; line-height: 1.8; color: var(--color-text);">
+				<PortableText value={page.data.content} />
+			</article>
+		</div>
+	)}
+</Base>

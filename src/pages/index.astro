@@ -1,0 +1,335 @@
+---
+import { getEmDashCollection, getSiteSettings } from "emdash";
+import { Image } from "emdash/ui";
+import Base from "../layouts/Base.astro";
+import { resolveStarterSiteIdentity } from "../utils/site-identity";
+
+// ── Fetch featured vehicles from EmDash ───────────────────────────────────
+// We fetch all vehicles and show the ones marked as "Show on Home Page"
+const { entries: vehicles, cacheHint } = await getEmDashCollection("vehicles", {
+	orderBy: { published_at: "desc" },
+});
+
+// ── Fetch home page section content from EmDash CMS ───────────────────────
+let homeData: Record<string, any> = {};
+let homeEditProps: Record<string, any> = {};
+
+try {
+	const { entries: homeEntries } = await getEmDashCollection("home_page");
+	if (homeEntries && homeEntries.length > 0) {
+		homeData = homeEntries[0].data || {};
+		homeEditProps = homeEntries[0].edit || {};
+	}
+} catch (e) {
+	// Fallback if home_page collection is not yet populated
+}
+
+const { siteTitle, siteTagline } = resolveStarterSiteIdentity(await getSiteSettings());
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+// Filter only featured vehicles for the home page grid
+const featuredVehicles = vehicles.filter((v) => v.data.is_featured);
+
+// Helper: format price in Indian Rupee notation
+function formatPrice(price?: number | null): string {
+	if (!price) return "Price on Request";
+	if (price >= 100000) {
+		return `₹${(price / 100000).toFixed(1)} Lakh`;
+	}
+	return `₹${price.toLocaleString("en-IN")}`;
+}
+
+// Helper: format mileage
+function formatMileage(km?: number | null): string {
+	if (!km) return "—";
+	return `${km.toLocaleString("en-IN")} km`;
+}
+
+// CMS Values with Fallbacks
+const heroBadge = homeData.hero_badge || "Trusted Auto Dealership";
+const heroHeadline = homeData.hero_headline || "Find Your";
+const heroAccentText = homeData.hero_accent_text || "Perfect Drive";
+const heroSubheadline = homeData.hero_subheadline || "Browse our handpicked collection of quality pre-owned vehicles. Every car is inspected, verified, and ready to drive home today.";
+const heroPrimaryBtnText = homeData.hero_primary_btn_text || "Browse Vehicles";
+const heroPrimaryBtnUrl = homeData.hero_primary_btn_url || "/vehicles";
+const heroSecondaryBtnText = homeData.hero_secondary_btn_text || "Learn More";
+const heroSecondaryBtnUrl = homeData.hero_secondary_btn_url || "/about";
+
+const stat1Value = homeData.stat1_value || `${vehicles.length}+`;
+const stat1Label = homeData.stat1_label || "Cars Available";
+const stat2Value = homeData.stat2_value || "500+";
+const stat2Label = homeData.stat2_label || "Happy Customers";
+const stat3Value = homeData.stat3_value || "100%";
+const stat3Label = homeData.stat3_label || "Verified Stock";
+
+const vehiclesTag = homeData.vehicles_tag || "Top Picks";
+const vehiclesTitle = homeData.vehicles_title || "Most Searched Vehicles";
+const vehiclesDesc = homeData.vehicles_description || "Our customers love these models. Handpicked for quality, performance, and value.";
+
+const whyTag = homeData.why_tag || "Why Gozzy Autos";
+const whyTitle = homeData.why_title || "Your Satisfaction is Our Top Priority";
+const whyDesc = homeData.why_description || "We're not just selling cars — we're helping you make one of the most important purchases of your life. Every vehicle in our lot is thoroughly inspected and comes with full transparency.";
+
+// Helper to extract image URL from string, bare ULID, JSON string, or EmDash image media object
+function getImageUrl(image: any): string | null {
+	if (!image) return null;
+
+	let img = image;
+
+	if (typeof img === "string") {
+		const trimmed = img.trim();
+		if (!trimmed) return null;
+
+		if (trimmed.startsWith("{")) {
+			try {
+				img = JSON.parse(trimmed);
+			} catch (e) {
+				// Keep as string if JSON parse fails
+			}
+		} else {
+			if (trimmed.startsWith("/") || trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+				return trimmed;
+			}
+			return `/_emdash/api/media/file/${trimmed}`;
+		}
+	}
+
+	if (typeof img === "object" && img !== null) {
+		const rawUrl = img.url || img.src || img.path || img.originalUrl || img.previewUrl;
+		if (rawUrl && typeof rawUrl === "string" && rawUrl.trim()) {
+			const u = rawUrl.trim();
+			return (u.startsWith("/") || u.startsWith("http://") || u.startsWith("https://"))
+				? u
+				: `/_emdash/api/media/file/${u}`;
+		}
+
+		// Storage key carries the full filename with extension (e.g. 01JM...png)
+		const storageKey = img.meta?.storageKey || img.storageKey || img.key || img.filename;
+		if (storageKey && typeof storageKey === "string" && storageKey.trim()) {
+			return `/_emdash/api/media/file/${storageKey.trim()}`;
+		}
+
+		const idKey = img.id || img._ref;
+		if (idKey && typeof idKey === "string" && idKey.trim()) {
+			return `/_emdash/api/media/file/${idKey.trim()}`;
+		}
+	}
+
+	return null;
+}
+
+const heroBgUrl = getImageUrl(homeData.hero_bg_image);
+---
+
+<Base title={siteTitle} description={siteTagline}>
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 1: HERO (All text dynamically loaded from CMS)
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="hero" id="hero">
+		<!-- Background image / gradient overlay -->
+		<div
+			class="hero-bg"
+			style={heroBgUrl ? `background: linear-gradient(135deg, rgba(10,12,16,0.92) 0%, rgba(10,12,16,0.65) 50%, rgba(10,12,16,0.9) 100%), url('${heroBgUrl}') center/cover no-repeat;` : undefined}
+		></div>
+
+		<div class="container">
+			<div class="hero-content">
+				<!-- Animated badge -->
+				<div class="hero-badge animate-fade-up" {...homeEditProps.hero_badge}>
+					{heroBadge}
+				</div>
+
+				<!-- Headline -->
+				<h1 class="animate-fade-up animate-delay-1" {...homeEditProps.hero_headline}>
+					{heroHeadline} <span class="accent" {...homeEditProps.hero_accent_text}>{heroAccentText}</span>
+				</h1>
+
+				<!-- Subheadline -->
+				<p class="hero-sub animate-fade-up animate-delay-2" {...homeEditProps.hero_subheadline}>
+					{heroSubheadline}
+				</p>
+
+				<!-- CTA Buttons -->
+				<div class="hero-actions animate-fade-up animate-delay-3">
+					<a href={heroPrimaryBtnUrl} class="btn btn-primary btn-lg" id="hero-browse-btn" {...homeEditProps.hero_primary_btn_text}>
+						{heroPrimaryBtnText}
+					</a>
+					<a href={heroSecondaryBtnUrl} class="btn btn-outline btn-lg" id="hero-about-btn" {...homeEditProps.hero_secondary_btn_text}>
+						{heroSecondaryBtnText}
+					</a>
+				</div>
+
+				<!-- Stats bar -->
+				<div class="hero-stats animate-fade-up animate-delay-3">
+					<div class="hero-stat">
+						<span class="hero-stat-value" {...homeEditProps.stat1_value}>{stat1Value || `${vehicles.length}+`}</span>
+						<span class="hero-stat-label" {...homeEditProps.stat1_label}>{stat1Label}</span>
+					</div>
+					<div class="hero-stat">
+						<span class="hero-stat-value" {...homeEditProps.stat2_value}>{stat2Value}</span>
+						<span class="hero-stat-label" {...homeEditProps.stat2_label}>{stat2Label}</span>
+					</div>
+					<div class="hero-stat">
+						<span class="hero-stat-value" {...homeEditProps.stat3_value}>{stat3Value}</span>
+						<span class="hero-stat-label" {...homeEditProps.stat3_label}>{stat3Label}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2: MOST SEARCHED VEHICLES
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="section" id="most-searched-vehicles">
+		<div class="container">
+			<div class="section-header">
+				<span class="section-tag" {...homeEditProps.vehicles_tag}>{vehiclesTag}</span>
+				<h2 {...homeEditProps.vehicles_title}>{vehiclesTitle}</h2>
+				<p {...homeEditProps.vehicles_description}>
+					{vehiclesDesc}
+				</p>
+			</div>
+
+			{featuredVehicles.length === 0 ? (
+				<div style="text-align:center; padding: 3rem; color: var(--color-text-muted);">
+					<p style="font-size: 2rem; margin-bottom: 1rem;">🚗</p>
+					<p>No featured vehicles yet.</p>
+					<p style="margin-top: 0.5rem;">
+						<a href="/_emdash/admin/content/vehicles/new" style="color: var(--color-accent);">
+							Add your first vehicle →
+						</a>
+					</p>
+				</div>
+			) : (
+				<div class="vehicles-grid">
+					{featuredVehicles.map((vehicle) => (
+						<article class="vehicle-card" id={`vehicle-${vehicle.id}`}>
+							<div class="vehicle-card-image">
+								{vehicle.data.featured_image
+									? <Image image={vehicle.data.featured_image} alt={vehicle.data.title} />
+									: (
+										<div class="vehicle-card-image-placeholder">
+											🚗
+										</div>
+									)
+								}
+								<span class="vehicle-card-badge">Featured</span>
+							</div>
+
+							<div class="vehicle-card-body">
+								<div class="vehicle-card-meta">
+									<span class="vehicle-card-year">{vehicle.data.year}</span>
+									{vehicle.data.fuel_type && (
+										<span class="vehicle-card-fuel">{vehicle.data.fuel_type}</span>
+									)}
+								</div>
+
+								<h3>{vehicle.data.make} {vehicle.data.model}</h3>
+
+								<div class="vehicle-card-chips">
+									{vehicle.data.transmission && (
+										<span class="chip">{vehicle.data.transmission}</span>
+									)}
+									{vehicle.data.mileage && (
+										<span class="chip">🛣️ {formatMileage(vehicle.data.mileage)}</span>
+									)}
+								</div>
+
+								{vehicle.data.short_description && (
+									<p class="vehicle-card-desc">{vehicle.data.short_description}</p>
+								)}
+
+								<div class="vehicle-card-footer">
+									<div class="vehicle-price">
+										{formatPrice(vehicle.data.price)}
+									</div>
+									<a
+										href={`/vehicles/${vehicle.id}`}
+										class="btn btn-outline"
+										id={`vehicle-details-${vehicle.id}`}
+									>
+										View Details
+									</a>
+								</div>
+							</div>
+						</article>
+					))}
+				</div>
+			)}
+
+			{featuredVehicles.length > 0 && (
+				<div style="text-align:center; margin-top: 3rem;">
+					<a href="/vehicles" class="btn btn-outline btn-lg" id="view-all-vehicles-btn">
+						View All Vehicles →
+					</a>
+				</div>
+			)}
+		</div>
+	</section>
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 3: WHY CHOOSE US (Image + Info side by side)
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="section" id="why-choose-us" style="background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+		<div class="container">
+			<div class="split-section">
+				<!-- Image side -->
+				<div class="split-image">
+					<img
+						src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&q=80"
+						alt="Car showroom at Gozzy Autos"
+						width="800"
+						height="600"
+					/>
+				</div>
+
+				<!-- Info side -->
+				<div class="split-content">
+					<span class="section-tag" {...homeEditProps.why_tag}>{whyTag}</span>
+					<h2 {...homeEditProps.why_title}>{whyTitle}</h2>
+					<p {...homeEditProps.why_description}>
+						{whyDesc}
+					</p>
+
+					<div class="feature-list">
+						<div class="feature-item">
+							<div class="feature-icon">✅</div>
+							<div class="feature-text">
+								<strong>100% Verified Vehicles</strong>
+								<span>Every car goes through a 150-point quality inspection before listing.</span>
+							</div>
+						</div>
+						<div class="feature-item">
+							<div class="feature-icon">💰</div>
+							<div class="feature-text">
+								<strong>Transparent Pricing</strong>
+								<span>No hidden fees. What you see is what you pay — guaranteed.</span>
+							</div>
+						</div>
+						<div class="feature-item">
+							<div class="feature-icon">🤝</div>
+							<div class="feature-text">
+								<strong>Easy Financing</strong>
+								<span>Quick loan approvals with our banking partners. Drive home today.</span>
+							</div>
+						</div>
+						<div class="feature-item">
+							<div class="feature-icon">📋</div>
+							<div class="feature-text">
+								<strong>Hassle-free RC Transfer</strong>
+								<span>We handle all the paperwork so you don't have to worry.</span>
+							</div>
+						</div>
+					</div>
+
+					<a href="/about" class="btn btn-primary" id="why-choose-learn-more-btn">
+						Learn More About Us
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</Base>
