@@ -1,8 +1,9 @@
 ---
-import { getMenu, getSiteSettings } from "emdash";
+import { getSiteSettings } from "emdash";
 import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from "emdash/ui";
 import { createPublicPageContext } from "emdash/page";
 import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import { getResolvedPrimaryMenu } from "../utils/navigation";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import HeaderScripts from "../components/HeaderScripts.astro";
@@ -24,7 +25,7 @@ const { siteTitle, siteTagline, siteLogo } = resolveStarterSiteIdentity(await ge
 const fullTitle = title.includes(siteTitle) ? title : `${title} — ${siteTitle}`;
 const pageDescription = description ?? siteTagline;
 
-const menu = await getMenu("primary");
+const menu = await getResolvedPrimaryMenu();
 
 const pageCtx = createPublicPageContext({
 	Astro,

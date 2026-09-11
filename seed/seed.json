@@ -189,6 +189,11 @@
 					"label": "Fallback Rich Text Content",
 					"type": "portableText",
 					"searchable": true
+				},
+				{
+					"slug": "show_in_nav",
+					"label": "Show in Top Navigation Bar",
+					"type": "boolean"
 				}
 			]
 		},

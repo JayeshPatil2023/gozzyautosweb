@@ -64,6 +64,7 @@ export interface Page {
   subtitle?: string;
   sections?: { "section_tag"?: string | null; "section_title"?: string | null; "section_layout"?: "hero" | "full-width" | "split-image-right" | "split-image-left" | "cta-banner" | null; "section_width"?: "default" | "reading" | "narrow" | "full" | null; "content"?: string | null; "button_text"?: string | null; "button_url"?: string | null; "secondary_button_text"?: string | null; "secondary_button_url"?: string | null; "image"?: { id: string; src?: string; alt?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } | null }[];
   content?: PortableTextBlock[];
+  show_in_nav?: boolean;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
