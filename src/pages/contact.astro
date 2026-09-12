@@ -1,0 +1,496 @@
+---
+import Base from "../layouts/Base.astro";
+import { resolveStarterSiteIdentity } from "../utils/site-identity";
+import { getSiteSettings } from "emdash";
+
+const { siteTitle } = resolveStarterSiteIdentity(await getSiteSettings());
+---
+
+<Base
+	title={`Contact Us — ${siteTitle}`}
+	description="Get in touch with Gozzy Autos for inquiries about pre-owned vehicles, financing, or test drives."
+>
+	<!-- ── Page Header Banner ──────────────────────────────────── -->
+	<section class="contact-header">
+		<div class="container">
+			<span class="section-tag">Get in Touch</span>
+			<h1>Contact Us</h1>
+			<p class="contact-header-sub">
+				Have questions about a vehicle, pricing, or financing options? Send us a message and our expert sales team will get back to you shortly.
+			</p>
+		</div>
+	</section>
+
+	<!-- ── Main Contact Section ─────────────────────────────────── -->
+	<section class="section contact-section">
+		<div class="container">
+			<div class="contact-grid">
+
+				<!-- Contact Form Card -->
+				<div class="contact-card form-card">
+					<h2>Send Us a Message</h2>
+
+					<!-- Success Alert Banner -->
+					<div id="contact-success-alert" class="alert alert-success is-hidden" role="alert">
+						<i class="ph-duotone ph-check-circle alert-icon"></i>
+						<span id="contact-success-text">Thank you! Your message has been sent successfully.</span>
+					</div>
+
+					<!-- Error Alert Banner -->
+					<div id="contact-error-alert" class="alert alert-danger is-hidden" role="alert">
+						<i class="ph-duotone ph-warning-circle alert-icon"></i>
+						<span id="contact-error-text">An error occurred. Please try again.</span>
+					</div>
+
+					<!-- Form -->
+					<form id="contact-form" novalidate>
+						<div class="form-grid">
+							<!-- First Name -->
+							<div class="form-group">
+								<label for="firstName">First Name <span class="required">*</span></label>
+								<input
+									type="text"
+									id="firstName"
+									name="firstName"
+									placeholder="e.g. Rahul"
+									required
+								/>
+							</div>
+
+							<!-- Last Name -->
+							<div class="form-group">
+								<label for="lastName">Last Name <span class="required">*</span></label>
+								<input
+									type="text"
+									id="lastName"
+									name="lastName"
+									placeholder="e.g. Sharma"
+									required
+								/>
+							</div>
+
+							<!-- Email Address -->
+							<div class="form-group">
+								<label for="email">Email Address <span class="required">*</span></label>
+								<input
+									type="email"
+									id="email"
+									name="email"
+									placeholder="rahul@example.com"
+									required
+								/>
+							</div>
+
+							<!-- Phone Number -->
+							<div class="form-group">
+								<label for="phone">Phone Number <span class="required">*</span></label>
+								<input
+									type="tel"
+									id="phone"
+									name="phone"
+									placeholder="+91 98765 43210"
+									required
+								/>
+							</div>
+
+							<!-- Comments / Message -->
+							<div class="form-group full-width">
+								<label for="comments">Comments / Message <span class="required">*</span></label>
+								<textarea
+									id="comments"
+									name="comments"
+									rows="5"
+									placeholder="Tell us about the vehicle you are interested in or ask any question..."
+									required
+								></textarea>
+							</div>
+
+							<!-- Submit Button -->
+							<div class="form-group full-width form-actions">
+								<button type="submit" id="contact-submit-btn" class="btn btn-primary btn-lg">
+									<span id="btn-text">Send Message</span>
+									<i class="ph-duotone ph-paper-plane-tilt" id="btn-icon"></i>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<!-- Dealership Contact Info Card -->
+				<div class="contact-card info-card">
+					<h2>Dealership Information</h2>
+
+					<div class="info-list">
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="ph-duotone ph-map-pin"></i>
+							</div>
+							<div class="info-details">
+								<h3>Showroom Address</h3>
+								<p>
+									Gozzy Autos Dealership Hub,<br />
+									Auto Market Road, Sector 12,<br />
+									Mumbai, Maharashtra — 400001
+								</p>
+							</div>
+						</div>
+
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="ph-duotone ph-phone-call"></i>
+							</div>
+							<div class="info-details">
+								<h3>Phone Number</h3>
+								<a href="tel:+911234567890">+91 12345 67890</a>
+							</div>
+						</div>
+
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="ph-duotone ph-envelope-simple"></i>
+							</div>
+							<div class="info-details">
+								<h3>Email Address</h3>
+								<a href="mailto:info@gozzyautos.com">info@gozzyautos.com</a>
+							</div>
+						</div>
+
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="ph-duotone ph-clock"></i>
+							</div>
+							<div class="info-details">
+								<h3>Working Hours</h3>
+								<p>
+									Monday – Saturday: 10:00 AM – 7:00 PM<br />
+									Sunday: By Appointment Only
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="info-cta-box">
+						<h3>Need Immediate Assistance?</h3>
+						<p>Browse our complete stock of verified vehicles or call our direct sales hotline.</p>
+						<a href="/vehicles" class="btn btn-outline w-full">
+							Browse Vehicle Inventory <i class="ph-duotone ph-arrow-right"></i>
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<style>
+		/* ── Page Header ────────────────────────────────────────── */
+		.contact-header {
+			background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg) 100%);
+			padding: var(--space-3xl) 0 var(--space-2xl);
+			border-bottom: 1px solid var(--color-border);
+			text-align: center;
+		}
+
+		.contact-header h1 {
+			font-size: clamp(2.2rem, 4vw, 3.25rem);
+			margin-bottom: var(--space-sm);
+		}
+
+		.contact-header-sub {
+			font-size: 1.1rem;
+			color: var(--color-text-muted);
+			max-width: 680px;
+			margin: 0 auto;
+		}
+
+		/* ── Contact Layout Grid ────────────────────────────────── */
+		.contact-section {
+			padding: var(--space-3xl) 0;
+		}
+
+		.contact-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: var(--space-2xl);
+			align-items: start;
+		}
+
+		@media (max-width: 992px) {
+			.contact-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		/* ── Card Styling ────────────────────────────────────────── */
+		.contact-card {
+			background: var(--color-surface);
+			border: 1px solid var(--color-border);
+			border-radius: var(--radius-lg);
+			padding: var(--space-2xl);
+			box-shadow: var(--shadow-card);
+		}
+
+		.contact-card h2 {
+			font-size: 1.5rem;
+			margin-bottom: var(--space-xl);
+			color: var(--color-text);
+		}
+
+		/* ── Alert Styling ───────────────────────────────────────── */
+		.alert {
+			display: flex;
+			align-items: center;
+			gap: var(--space-md);
+			padding: var(--space-md) var(--space-lg);
+			border-radius: var(--radius-md);
+			margin-bottom: var(--space-xl);
+			font-size: 0.95rem;
+			line-height: 1.4;
+		}
+
+		.alert.is-hidden,
+		.alert.d-none {
+			display: none !important;
+		}
+
+		.alert-icon {
+			font-size: 1.4rem;
+			flex-shrink: 0;
+		}
+
+		.alert-success {
+			background: rgba(34, 197, 94, 0.12);
+			border: 1px solid rgba(34, 197, 94, 0.3);
+			color: #4ade80;
+		}
+
+		.alert-danger {
+			background: rgba(239, 68, 68, 0.12);
+			border: 1px solid rgba(239, 68, 68, 0.3);
+			color: #f87171;
+		}
+
+		/* ── Form Styling ────────────────────────────────────────── */
+		.form-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: var(--space-lg);
+		}
+
+		@media (max-width: 640px) {
+			.form-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.form-group {
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-xs);
+		}
+
+		.form-group.full-width {
+			grid-column: 1 / -1;
+		}
+
+		.form-group label {
+			font-family: var(--font-display);
+			font-size: 0.875rem;
+			font-weight: 600;
+			color: var(--color-text);
+		}
+
+		.form-group label .required {
+			color: #ef4444;
+		}
+
+		.form-group input,
+		.form-group textarea {
+			width: 100%;
+			font-family: var(--font-body);
+			font-size: 0.95rem;
+			color: var(--color-text);
+			background: var(--color-surface-2);
+			border: 1px solid var(--color-border);
+			border-radius: var(--radius-md);
+			padding: 0.75rem 1rem;
+			outline: none;
+			transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+		}
+
+		.form-group input::placeholder,
+		.form-group textarea::placeholder {
+			color: var(--color-text-subtle);
+		}
+
+		.form-group input:focus,
+		.form-group textarea:focus {
+			border-color: var(--color-accent);
+			box-shadow: 0 0 0 3px var(--color-accent-glow);
+		}
+
+		.form-actions {
+			margin-top: var(--space-sm);
+		}
+
+		/* ── Dealership Info List ────────────────────────────────── */
+		.info-list {
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-xl);
+			margin-bottom: var(--space-2xl);
+		}
+
+		.info-item {
+			display: flex;
+			align-items: flex-start;
+			gap: var(--space-lg);
+		}
+
+		.info-icon {
+			width: 48px;
+			height: 48px;
+			min-width: 48px;
+			border-radius: var(--radius-full);
+			background: var(--color-accent-glow);
+			border: 1px solid rgba(245, 166, 35, 0.25);
+			color: var(--color-accent);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 1.35rem;
+		}
+
+		.info-details h3 {
+			font-size: 0.95rem;
+			font-weight: 600;
+			color: var(--color-text);
+			margin-bottom: 2px;
+		}
+
+		.info-details p,
+		.info-details a {
+			font-size: 0.9rem;
+			color: var(--color-text-muted);
+			line-height: 1.6;
+		}
+
+		.info-details a:hover {
+			color: var(--color-accent);
+		}
+
+		/* ── Info CTA Box ────────────────────────────────────────── */
+		.info-cta-box {
+			background: var(--color-surface-2);
+			border: 1px solid var(--color-border);
+			border-radius: var(--radius-md);
+			padding: var(--space-xl);
+		}
+
+		.info-cta-box h3 {
+			font-size: 1rem;
+			color: var(--color-text);
+			margin-bottom: var(--space-xs);
+		}
+
+		.info-cta-box p {
+			font-size: 0.875rem;
+			color: var(--color-text-muted);
+			margin-bottom: var(--space-lg);
+		}
+
+		.w-full {
+			width: 100%;
+			justify-content: center;
+		}
+
+		/* Spinner for submission state */
+		@keyframes spin {
+			to { transform: rotate(360deg); }
+		}
+
+		.spinner {
+			animation: spin 1s linear infinite;
+		}
+	</style>
+
+	<!-- Client-side AJAX Submission Script -->
+	<script is:inline>
+		document.addEventListener("DOMContentLoaded", () => {
+			const form = document.getElementById("contact-form");
+			const submitBtn = document.getElementById("contact-submit-btn");
+			const btnText = document.getElementById("btn-text");
+			const btnIcon = document.getElementById("btn-icon");
+			const successAlert = document.getElementById("contact-success-alert");
+			const successText = document.getElementById("contact-success-text");
+			const errorAlert = document.getElementById("contact-error-alert");
+			const errorText = document.getElementById("contact-error-text");
+
+			if (!form) return;
+
+			form.addEventListener("submit", async (e) => {
+				e.preventDefault();
+
+				// Reset alerts
+				successAlert.classList.add("is-hidden");
+				errorAlert.classList.add("is-hidden");
+
+				const firstName = document.getElementById("firstName").value.trim();
+				const lastName = document.getElementById("lastName").value.trim();
+				const email = document.getElementById("email").value.trim();
+				const phone = document.getElementById("phone").value.trim();
+				const comments = document.getElementById("comments").value.trim();
+
+				// Client validation
+				if (!firstName || !lastName || !email || !phone || !comments) {
+					errorText.textContent = "Please fill in all required fields.";
+					errorAlert.classList.remove("is-hidden");
+					return;
+				}
+
+				// Disable submit button & show loading state
+				submitBtn.disabled = true;
+				btnText.textContent = "Sending Message...";
+				btnIcon.className = "ph-duotone ph-spinner spinner";
+
+				try {
+					const res = await fetch("/api/contact", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"Accept": "application/json",
+						},
+						body: JSON.stringify({
+							firstName,
+							lastName,
+							email,
+							phone,
+							comments,
+						}),
+					});
+
+					const data = await res.json();
+
+					if (res.ok && data.success) {
+						successText.textContent = data.message || "Thank you! Your message has been sent successfully.";
+						successAlert.classList.remove("is-hidden");
+						form.reset();
+					} else {
+						errorText.textContent = data.message || "Failed to send message. Please try again.";
+						errorAlert.classList.remove("is-hidden");
+					}
+				} catch (err) {
+					console.error("Submission error:", err);
+					errorText.textContent = "Network error while sending message. Please try again later.";
+					errorAlert.classList.remove("is-hidden");
+				} finally {
+					// Restore button state
+					submitBtn.disabled = false;
+					btnText.textContent = "Send Message";
+					btnIcon.className = "ph-duotone ph-paper-plane-tilt";
+				}
+			});
+		});
+	</script>
+</Base>
+

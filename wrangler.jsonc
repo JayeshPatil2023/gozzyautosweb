@@ -22,6 +22,12 @@
 			"binding": "LOADER",
 		},
 	],
+	// Cloudflare Email Service binding for production
+	"send_email": [
+		{
+			"name": "EMAIL"
+		}
+	],
 	// General maintenance cron trigger
 	"triggers": {
 		"crons": ["* * * * *"],
