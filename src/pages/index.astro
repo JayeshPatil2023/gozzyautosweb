@@ -124,55 +124,67 @@ const heroBgUrl = getImageUrl(homeData.hero_bg_image);
 <Base title={siteTitle} description={siteTagline}>
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 1: HERO (All text dynamically loaded from CMS)
+	     SECTION 1: HERO (ASP Light Able Header Style)
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="hero" id="hero">
-		<!-- Background image / gradient overlay -->
+	<section class="py-5 bg-light position-relative overflow-hidden" id="hero">
+		<!-- Background image / overlay -->
 		<div
-			class="hero-bg"
-			style={heroBgUrl ? `background: linear-gradient(135deg, rgba(10,12,16,0.92) 0%, rgba(10,12,16,0.65) 50%, rgba(10,12,16,0.9) 100%), url('${heroBgUrl}') center/cover no-repeat;` : undefined}
+			class="position-absolute top-0 start-0 w-100 h-100 opacity-25"
+			style={heroBgUrl ? `background: url('${heroBgUrl}') center/cover no-repeat;` : undefined}
 		></div>
 
-		<div class="container">
-			<div class="hero-content">
-				<!-- Animated badge -->
-				<div class="hero-badge animate-fade-up" {...homeEditProps.hero_badge}>
-					{heroBadge}
+		<div class="container position-relative z-1 py-4 py-lg-5">
+			<div class="row align-items-center gy-4">
+				<div class="col-lg-7">
+					<!-- Badge -->
+					<span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill mb-3 fs-6" {...homeEditProps.hero_badge}>
+						{heroBadge}
+					</span>
+
+					<!-- Headline -->
+					<h1 class="display-4 fw-bold mb-3 text-dark" {...homeEditProps.hero_headline}>
+						{heroHeadline} <span class="text-primary" {...homeEditProps.hero_accent_text}>{heroAccentText}</span>
+					</h1>
+
+					<!-- Subheadline -->
+					<p class="fs-5 text-muted mb-4 pe-lg-4" {...homeEditProps.hero_subheadline}>
+						{heroSubheadline}
+					</p>
+
+					<!-- CTA Buttons -->
+					<div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+						<a href={heroPrimaryBtnUrl} class="btn btn-primary btn-lg shadow-sm" id="hero-browse-btn" {...homeEditProps.hero_primary_btn_text}>
+							{heroPrimaryBtnText} <i class="ph-duotone ph-arrow-right ms-1"></i>
+						</a>
+						<a href={heroSecondaryBtnUrl} class="btn btn-outline-secondary btn-lg" id="hero-about-btn" {...homeEditProps.hero_secondary_btn_text}>
+							{heroSecondaryBtnText}
+						</a>
+					</div>
+
+					<!-- Stats bar -->
+					<div class="row g-3 pt-3 border-top">
+						<div class="col-4">
+							<div class="fw-bold fs-3 text-dark" {...homeEditProps.stat1_value}>{stat1Value || `${vehicles.length}+`}</div>
+							<div class="text-muted f-13 text-uppercase" {...homeEditProps.stat1_label}>{stat1Label}</div>
+						</div>
+						<div class="col-4">
+							<div class="fw-bold fs-3 text-dark" {...homeEditProps.stat2_value}>{stat2Value}</div>
+							<div class="text-muted f-13 text-uppercase" {...homeEditProps.stat2_label}>{stat2Label}</div>
+						</div>
+						<div class="col-4">
+							<div class="fw-bold fs-3 text-dark" {...homeEditProps.stat3_value}>{stat3Value}</div>
+							<div class="text-muted f-13 text-uppercase" {...homeEditProps.stat3_label}>{stat3Label}</div>
+						</div>
+					</div>
 				</div>
 
-				<!-- Headline -->
-				<h1 class="animate-fade-up animate-delay-1" {...homeEditProps.hero_headline}>
-					{heroHeadline} <span class="accent" {...homeEditProps.hero_accent_text}>{heroAccentText}</span>
-				</h1>
-
-				<!-- Subheadline -->
-				<p class="hero-sub animate-fade-up animate-delay-2" {...homeEditProps.hero_subheadline}>
-					{heroSubheadline}
-				</p>
-
-				<!-- CTA Buttons -->
-				<div class="hero-actions animate-fade-up animate-delay-3">
-					<a href={heroPrimaryBtnUrl} class="btn btn-primary btn-lg" id="hero-browse-btn" {...homeEditProps.hero_primary_btn_text}>
-						{heroPrimaryBtnText}
-					</a>
-					<a href={heroSecondaryBtnUrl} class="btn btn-outline btn-lg" id="hero-about-btn" {...homeEditProps.hero_secondary_btn_text}>
-						{heroSecondaryBtnText}
-					</a>
-				</div>
-
-				<!-- Stats bar -->
-				<div class="hero-stats animate-fade-up animate-delay-3">
-					<div class="hero-stat">
-						<span class="hero-stat-value" {...homeEditProps.stat1_value}>{stat1Value || `${vehicles.length}+`}</span>
-						<span class="hero-stat-label" {...homeEditProps.stat1_label}>{stat1Label}</span>
-					</div>
-					<div class="hero-stat">
-						<span class="hero-stat-value" {...homeEditProps.stat2_value}>{stat2Value}</span>
-						<span class="hero-stat-label" {...homeEditProps.stat2_label}>{stat2Label}</span>
-					</div>
-					<div class="hero-stat">
-						<span class="hero-stat-value" {...homeEditProps.stat3_value}>{stat3Value}</span>
-						<span class="hero-stat-label" {...homeEditProps.stat3_label}>{stat3Label}</span>
+				<div class="col-lg-5 text-center">
+					<div class="card border-0 shadow-lg overflow-hidden rounded-4">
+						<img
+							src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"
+							alt="Gozzy Autos Showcase"
+							class="img-fluid"
+						/>
 					</div>
 				</div>
 			</div>
@@ -180,89 +192,91 @@ const heroBgUrl = getImageUrl(homeData.hero_bg_image);
 	</section>
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 2: MOST SEARCHED VEHICLES
+	     SECTION 2: MOST SEARCHED VEHICLES (ASP Cards)
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="section" id="most-searched-vehicles">
-		<div class="container">
-			<div class="section-header">
-				<span class="section-tag" {...homeEditProps.vehicles_tag}>{vehiclesTag}</span>
-				<h2 {...homeEditProps.vehicles_title}>{vehiclesTitle}</h2>
-				<p {...homeEditProps.vehicles_description}>
+	<section class="py-5 bg-white" id="most-searched-vehicles">
+		<div class="container py-4">
+			<div class="text-center mb-5">
+				<span class="section-tag mb-2" {...homeEditProps.vehicles_tag}>{vehiclesTag}</span>
+				<h2 class="fw-bold fs-2 text-dark" {...homeEditProps.vehicles_title}>{vehiclesTitle}</h2>
+				<p class="text-muted col-lg-6 mx-auto" {...homeEditProps.vehicles_description}>
 					{vehiclesDesc}
 				</p>
 			</div>
 
 			{featuredVehicles.length === 0 ? (
-				<div style="text-align:center; padding: 3rem; color: var(--color-text-muted);">
-					<p style="font-size: 2rem; margin-bottom: 1rem;">🚗</p>
-					<p>No featured vehicles yet.</p>
-					<p style="margin-top: 0.5rem;">
-						<a href="/_emdash/admin/content/vehicles/new" style="color: var(--color-accent);">
+				<div class="text-center py-5 bg-light rounded-4">
+					<p class="fs-1 mb-2">🚗</p>
+					<p class="text-muted">No featured vehicles available right now.</p>
+					<p class="mt-2">
+						<a href="/_emdash/admin/content/vehicles/new" class="btn btn-sm btn-primary">
 							Add your first vehicle →
 						</a>
 					</p>
 				</div>
 			) : (
-				<div class="vehicles-grid">
+				<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 					{featuredVehicles.map((vehicle) => (
-						<article class="vehicle-card" id={`vehicle-${vehicle.id}`}>
-							<div class="vehicle-card-image">
-								{vehicle.data.featured_image
-									? <Image image={vehicle.data.featured_image} alt={vehicle.data.title} />
-									: (
-										<div class="vehicle-card-image-placeholder">
-											🚗
-										</div>
-									)
-								}
-								<span class="vehicle-card-badge">Featured</span>
-							</div>
-
-							<div class="vehicle-card-body">
-								<div class="vehicle-card-meta">
-									<span class="vehicle-card-year">{vehicle.data.year}</span>
-									{vehicle.data.fuel_type && (
-										<span class="vehicle-card-fuel">{vehicle.data.fuel_type}</span>
-									)}
+						<div class="col">
+							<article class="card h-100 border shadow-sm hover-shadow transition-all rounded-3" id={`vehicle-${vehicle.id}`}>
+								<div class="vehicle-card-image position-relative">
+									{vehicle.data.featured_image
+										? <Image image={vehicle.data.featured_image} alt={vehicle.data.title} class="card-img-top" />
+										: (
+											<div class="d-flex align-items-center justify-content-center bg-light text-muted fs-1" style="height: 220px;">
+												🚗
+											</div>
+										)
+									}
+									<span class="badge bg-primary position-absolute top-0 start-0 m-3">Featured</span>
 								</div>
 
-								<h3>{vehicle.data.make} {vehicle.data.model}</h3>
-
-								<div class="vehicle-card-chips">
-									{vehicle.data.transmission && (
-										<span class="chip">{vehicle.data.transmission}</span>
-									)}
-									{vehicle.data.mileage && (
-										<span class="chip">🛣️ {formatMileage(vehicle.data.mileage)}</span>
-									)}
-								</div>
-
-								{vehicle.data.short_description && (
-									<p class="vehicle-card-desc">{vehicle.data.short_description}</p>
-								)}
-
-								<div class="vehicle-card-footer">
-									<div class="vehicle-price">
-										{formatPrice(vehicle.data.price)}
+								<div class="card-body d-flex flex-column">
+									<div class="d-flex align-items-center gap-2 mb-2">
+										<span class="badge bg-primary-subtle text-primary">{vehicle.data.year}</span>
+										{vehicle.data.fuel_type && (
+											<small class="text-muted">{vehicle.data.fuel_type}</small>
+										)}
 									</div>
-									<a
-										href={`/vehicles/${vehicle.id}`}
-										class="btn btn-outline"
-										id={`vehicle-details-${vehicle.id}`}
-									>
-										View Details
-									</a>
+
+									<h5 class="card-title fw-bold text-dark mb-2">{vehicle.data.make} {vehicle.data.model}</h5>
+
+									<div class="d-flex gap-2 flex-wrap mb-3">
+										{vehicle.data.transmission && (
+											<span class="badge bg-light text-dark border">{vehicle.data.transmission}</span>
+										)}
+										{vehicle.data.mileage && (
+											<span class="badge bg-light text-dark border">🛣️ {formatMileage(vehicle.data.mileage)}</span>
+										)}
+									</div>
+
+									{vehicle.data.short_description && (
+										<p class="card-text text-muted small mb-3 flex-grow-1">{vehicle.data.short_description}</p>
+									)}
+
+									<div class="pt-3 border-top mt-auto d-flex align-items-center justify-content-between">
+										<div class="fw-bold fs-5 text-dark">
+											{formatPrice(vehicle.data.price)}
+										</div>
+										<a
+											href={`/vehicles/${vehicle.id}`}
+											class="btn btn-outline-primary btn-sm rounded-pill"
+											id={`vehicle-details-${vehicle.id}`}
+										>
+											View Details
+										</a>
+									</div>
 								</div>
-							</div>
-						</article>
+							</article>
+						</div>
 					))}
 				</div>
 			)}
 
 			{featuredVehicles.length > 0 && (
-				<div style="text-align:center; margin-top: 3rem;">
-					<a href="/vehicles" class="btn btn-outline btn-lg" id="view-all-vehicles-btn">
-						View All Vehicles →
+				<div class="text-center mt-5">
+					<a href="/vehicles" class="btn btn-outline-dark btn-lg rounded-pill" id="view-all-vehicles-btn">
+						View All Vehicles <i class="ph-duotone ph-arrow-right ms-1"></i>
 					</a>
 				</div>
 			)}
@@ -270,62 +284,71 @@ const heroBgUrl = getImageUrl(homeData.hero_bg_image);
 	</section>
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 3: WHY CHOOSE US (Image + Info side by side)
+	     SECTION 3: WHY CHOOSE US (Split Section)
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="section" id="why-choose-us" style="background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
-		<div class="container">
-			<div class="split-section">
+	<section class="py-5 bg-light border-top border-bottom" id="why-choose-us">
+		<div class="container py-4">
+			<div class="row align-items-center gy-4">
 				<!-- Image side -->
-				<div class="split-image">
-					<img
-						src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&q=80"
-						alt="Car showroom at Gozzy Autos"
-						width="800"
-						height="600"
-					/>
+				<div class="col-lg-6">
+					<div class="rounded-4 overflow-hidden shadow-lg position-relative">
+						<img
+							src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=800&q=80"
+							alt="Car showroom at Gozzy Autos"
+							class="img-fluid w-100"
+						/>
+					</div>
 				</div>
 
 				<!-- Info side -->
-				<div class="split-content">
-					<span class="section-tag" {...homeEditProps.why_tag}>{whyTag}</span>
-					<h2 {...homeEditProps.why_title}>{whyTitle}</h2>
-					<p {...homeEditProps.why_description}>
+				<div class="col-lg-6 ps-lg-4">
+					<span class="section-tag mb-2" {...homeEditProps.why_tag}>{whyTag}</span>
+					<h2 class="fw-bold fs-2 text-dark mb-3" {...homeEditProps.why_title}>{whyTitle}</h2>
+					<p class="text-muted fs-6 mb-4" {...homeEditProps.why_description}>
 						{whyDesc}
 					</p>
 
-					<div class="feature-list">
-						<div class="feature-item">
-							<div class="feature-icon">✅</div>
-							<div class="feature-text">
-								<strong>100% Verified Vehicles</strong>
-								<span>Every car goes through a 150-point quality inspection before listing.</span>
+					<div class="row g-3 mb-4">
+						<div class="col-sm-6">
+							<div class="d-flex align-items-start gap-3 p-3 bg-white rounded-3 border">
+								<div class="fs-4 text-primary"><i class="ph-duotone ph-check-circle"></i></div>
+								<div>
+									<h6 class="fw-bold mb-1 text-dark">100% Verified Stock</h6>
+									<small class="text-muted">Rigorous 150-point vehicle inspection.</small>
+								</div>
 							</div>
 						</div>
-						<div class="feature-item">
-							<div class="feature-icon">💰</div>
-							<div class="feature-text">
-								<strong>Transparent Pricing</strong>
-								<span>No hidden fees. What you see is what you pay — guaranteed.</span>
+						<div class="col-sm-6">
+							<div class="d-flex align-items-start gap-3 p-3 bg-white rounded-3 border">
+								<div class="fs-4 text-primary"><i class="ph-duotone ph-currency-circle-dollar"></i></div>
+								<div>
+									<h6 class="fw-bold mb-1 text-dark">Transparent Pricing</h6>
+									<small class="text-muted">No hidden fees or surprise charges.</small>
+								</div>
 							</div>
 						</div>
-						<div class="feature-item">
-							<div class="feature-icon">🤝</div>
-							<div class="feature-text">
-								<strong>Easy Financing</strong>
-								<span>Quick loan approvals with our banking partners. Drive home today.</span>
+						<div class="col-sm-6">
+							<div class="d-flex align-items-start gap-3 p-3 bg-white rounded-3 border">
+								<div class="fs-4 text-primary"><i class="ph-duotone ph-handshake"></i></div>
+								<div>
+									<h6 class="fw-bold mb-1 text-dark">Easy Financing</h6>
+									<small class="text-muted">Instant loan assistance & low rates.</small>
+								</div>
 							</div>
 						</div>
-						<div class="feature-item">
-							<div class="feature-icon">📋</div>
-							<div class="feature-text">
-								<strong>Hassle-free RC Transfer</strong>
-								<span>We handle all the paperwork so you don't have to worry.</span>
+						<div class="col-sm-6">
+							<div class="d-flex align-items-start gap-3 p-3 bg-white rounded-3 border">
+								<div class="fs-4 text-primary"><i class="ph-duotone ph-file-text"></i></div>
+								<div>
+									<h6 class="fw-bold mb-1 text-dark">Hassle-Free RC Transfer</h6>
+									<small class="text-muted">Complete end-to-end paperwork support.</small>
+								</div>
 							</div>
 						</div>
 					</div>
 
-					<a href="/about" class="btn btn-primary" id="why-choose-learn-more-btn">
-						Learn More About Us
+					<a href="/about" class="btn btn-primary rounded-pill px-4" id="why-choose-learn-more-btn">
+						Learn More About Us <i class="ph-duotone ph-arrow-right ms-1"></i>
 					</a>
 				</div>
 			</div>

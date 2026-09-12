@@ -1,8 +1,12 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import node from "@astrojs/node";
 import react from "@astrojs/react";
 import { defineConfig } from "astro/config";
 import emdash, { local } from "emdash/astro";
 import { sqlite } from "emdash/db";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Gozzy Autos Web — Local Development Configuration
@@ -32,6 +36,12 @@ export default defineConfig({
 				directory: "./uploads",
 				baseUrl: "/_emdash/api/media/file",
 			}),
+			plugins: [
+				{
+					id: "gozzy-email-cloudflare",
+					entrypoint: path.resolve(__dirname, "./src/plugins/gozzy-email-cloudflare/index.ts").replace(/\\/g, "/"),
+				},
+			],
 		}),
 	],
 	devToolbar: { enabled: false },

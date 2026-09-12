@@ -9,42 +9,55 @@ export interface Props {
 const { siteTitle, siteLogo, menu, currentPath } = Astro.props;
 ---
 
-<!-- ── Header ───────────────────────────────────────── -->
-<header class="site-header">
-	<div class="container header-inner">
-		<!-- Logo -->
-		<a href="/" class="site-logo" id="site-logo-link">
+<!-- ── ASP Theme Header Nav ───────────────────────── -->
+<nav class="navbar navbar-expand-md navbar-light default sticky-top bg-white border-bottom shadow-sm">
+	<div class="container">
+		<!-- Brand / Logo -->
+		<a class="navbar-brand d-flex align-items-center gap-2" href="/" id="site-logo-link">
 			{siteLogo?.url
-				? <img src={siteLogo.url} alt={siteLogo.alt || siteTitle} style="height:40px;width:auto;" />
+				? <img src={siteLogo.url} alt={siteLogo.alt || siteTitle} style="max-height:40px;width:auto;" />
 				: (
-					<>
-						<span class="logo-icon">🚗</span>
-						<span class="logo-text">
-							<span class="logo-accent">Gozzy</span> Autos
-						</span>
-					</>
+					<span class="fs-4 fw-bold text-dark d-flex align-items-center gap-2">
+						<span class="badge bg-primary fs-5">🚗</span>
+						<span><strong class="text-primary">Gozzy</strong> Autos</span>
+					</span>
 				)
 			}
 		</a>
 
-		<!-- Primary Navigation -->
-		<nav class="primary-nav" aria-label="Primary navigation">
-			{menu?.items.map((item) => (
-				<a
-					href={item.url}
-					target={item.target}
-					class={currentPath === item.url ? "active" : ""}
-				>
-					{item.label}
-				</a>
-			))}
-		</nav>
+		<!-- Mobile Toggler -->
+		<button
+			class="navbar-toggler rounded"
+			type="button"
+			data-bs-toggle="collapse"
+			data-bs-target="#navbarTogglerMain"
+			aria-controls="navbarTogglerMain"
+			aria-expanded="false"
+			aria-label="Toggle navigation"
+		>
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
-		<!-- Header CTA -->
-		<div class="header-cta">
-			<a href="/vehicles" class="btn btn-primary" id="header-browse-btn">
-				Browse Cars
-			</a>
+		<!-- Nav Links & CTA -->
+		<div class="collapse navbar-collapse" id="navbarTogglerMain">
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-md-center gap-md-2">
+				{menu?.items.map((item) => (
+					<li class="nav-item">
+						<a
+							href={item.url}
+							target={item.target}
+							class={`nav-link fw-medium ${currentPath === item.url ? "active text-primary fw-bold" : ""}`}
+						>
+							{item.label}
+						</a>
+					</li>
+				))}
+			</ul>
+			<div class="d-flex align-items-center ms-md-3">
+				<a href="/vehicles" class="btn btn-primary" id="header-browse-btn">
+					Browse Cars <i class="ph-duotone ph-car ms-1"></i>
+				</a>
+			</div>
 		</div>
 	</div>
-</header>
+</nav>
