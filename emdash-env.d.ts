@@ -72,6 +72,26 @@ export interface Page {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
+export interface SiteConfiguration {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  email_from?: string;
+  email_from_name?: string;
+  admin_email?: string;
+  staff_email?: string;
+  mailgun_domain?: string;
+  email_provider?: string;
+  recaptcha_site_key?: string;
+  recaptcha_secret_key?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 export interface Vehicle {
   id: string;
   slug: string | null;
@@ -99,6 +119,7 @@ declare module "emdash" {
     custom_scripts: CustomScript;
     home_page: HomePage;
     pages: Page;
+    site_configurations: SiteConfiguration;
     vehicles: Vehicle;
   }
 }

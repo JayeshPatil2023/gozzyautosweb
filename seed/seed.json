@@ -363,6 +363,69 @@
 					"type": "text"
 				}
 			]
+		},
+		{
+			"slug": "site_configurations",
+			"label": "Site Configurations",
+			"labelSingular": "Site Configuration",
+			"supports": [
+				"revisions"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Configuration Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "email_from",
+					"label": "From Email Address",
+					"type": "string"
+				},
+				{
+					"slug": "email_from_name",
+					"label": "From Display Name",
+					"type": "string"
+				},
+				{
+					"slug": "admin_email",
+					"label": "Admin Recipient Email",
+					"type": "string"
+				},
+				{
+					"slug": "staff_email",
+					"label": "Staff Recipient Email",
+					"type": "string"
+				},
+				{
+					"slug": "mailgun_domain",
+					"label": "Mailgun Sending Domain",
+					"type": "string"
+				},
+				{
+					"slug": "email_provider",
+					"label": "Default Email Provider",
+					"type": "select",
+					"options": [
+						{ "label": "Auto (Automatic Selection)", "value": "auto" },
+						{ "label": "Cloudflare Email Binding", "value": "cloudflare" },
+						{ "label": "Mailgun API", "value": "mailgun" },
+						{ "label": "SMTP Server", "value": "smtp" }
+					]
+				},
+				{
+					"slug": "recaptcha_site_key",
+					"label": "reCAPTCHA v3 Site Key (Public)",
+					"type": "string"
+				},
+				{
+					"slug": "recaptcha_secret_key",
+					"label": "reCAPTCHA v3 Secret Key (Server-side)",
+					"type": "string"
+				}
+			]
 		}
 	],
 	"menus": [
@@ -568,6 +631,24 @@
 					"title": "Global Header & Footer Scripts",
 					"header_script": "",
 					"footer_script": ""
+				}
+			}
+		],
+		"site_configurations": [
+			{
+				"id": "site-config-main",
+				"slug": "main",
+				"status": "published",
+				"data": {
+					"title": "Global Site Configuration",
+					"email_from": "no-reply@cs.systenics.com",
+					"email_from_name": "Gozzy Autos",
+					"admin_email": "jayesh.p@systenics.com",
+					"staff_email": "info@gozzyautos.com",
+					"mailgun_domain": "cs.systenics.com",
+					"email_provider": "auto",
+					"recaptcha_site_key": "",
+					"recaptcha_secret_key": ""
 				}
 			}
 		]

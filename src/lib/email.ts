@@ -41,18 +41,27 @@ let cfEnvCache: EnvMap | null | undefined;
 let cfBindingCache: Record<string, unknown> | null | undefined;
 
 const ENV_KEYS = [
+	"PUBLIC_RECAPTCHA_SITE_KEY",
+	"RECAPTCHA_SECRET_KEY",
+	"GOZZY_SMTP_SERVER",
+	"GOZZY_SMTP_PORT",
+	"GOZZY_SMTP_USERNAME",
+	"GOZZY_SMTP_PASSWORD",
+	"GOZZY_MAILGUN_API_KEY",
+	"GOZZY_MAILGUN_DOMAIN",
+	"GOZZY_EMAIL_FROM",
+	"GOZZY_EMAIL_FROM_NAME",
+	"GOZZY_ADMIN_EMAIL",
+	"GOZZY_STAFF_EMAIL",
+	"EMAIL_PROVIDER",
+	// Legacy fallback keys
 	"SMTP_HOST",
 	"SMTP_PORT",
 	"SMTP_USER",
 	"SMTP_PASS",
 	"SMTP_SECURE",
-	"GOZZY_EMAIL_FROM",
-	"GOZZY_EMAIL_FROM_NAME",
-	"GOZZY_ADMIN_EMAIL",
-	"GOZZY_STAFF_EMAIL",
 	"MAILGUN_API_KEY",
 	"MAILGUN_DOMAIN",
-	"EMAIL_PROVIDER",
 ] as const;
 
 export function getDevEmails(): StoredEmail[] {
@@ -99,34 +108,82 @@ async function resolveCloudflareEmailBinding(): Promise<unknown | undefined> {
 	return bindings.EMAIL ?? bindings.SEND_EMAIL;
 }
 
-/** Resolve environment variables across Vite, Node process.env, and Cloudflare Worker bindings */
-export async function getEnv(): Promise<EnvMap> {
+import { getEmDashEntry, getEmDashCollection } from "emdash";
+
+async function loadCmsSiteConfig(): Promise<EnvMap> {
 	const out: EnvMap = {};
 	try {
-		const meta = import.meta.env as unknown as EnvMap;
-		for (const k of ENV_KEYS) {
-			if (meta[k]) out[k] = meta[k];
+		let data: Record<string, any> | undefined;
+		const { entry } = await getEmDashEntry("site_configurations" as any, "main");
+		if (entry?.data) {
+			data = entry.data as Record<string, any>;
+		} else {
+			const { entries } = await getEmDashCollection("site_configurations" as any);
+			if (entries && entries.length > 0) {
+				data = entries[0].data as Record<string, any>;
+			}
+		}
+
+		if (data) {
+			if (data.email_from) out.GOZZY_EMAIL_FROM = String(data.email_from);
+			if (data.email_from_name) out.GOZZY_EMAIL_FROM_NAME = String(data.email_from_name);
+			if (data.admin_email) out.GOZZY_ADMIN_EMAIL = String(data.admin_email);
+			if (data.staff_email) out.GOZZY_STAFF_EMAIL = String(data.staff_email);
+			if (data.mailgun_domain) {
+				out.GOZZY_MAILGUN_DOMAIN = String(data.mailgun_domain);
+				out.MAILGUN_DOMAIN = String(data.mailgun_domain);
+			}
+			if (data.email_provider) out.EMAIL_PROVIDER = String(data.email_provider);
+			if (data.recaptcha_site_key) out.PUBLIC_RECAPTCHA_SITE_KEY = String(data.recaptcha_site_key);
+			if (data.recaptcha_secret_key) out.RECAPTCHA_SECRET_KEY = String(data.recaptcha_secret_key);
 		}
 	} catch {
 		/* ignore */
 	}
+	return out;
+}
+
+/** Resolve environment & CMS configuration variables across EmDash CMS, Vite, Node process.env, and Cloudflare Worker bindings */
+export async function getEnv(): Promise<EnvMap> {
+	const out: EnvMap = {};
+
+	// 1. EmDash CMS `site_configurations`
+	const cms = await loadCmsSiteConfig();
+	for (const k of ENV_KEYS) {
+		if (cms[k]) out[k] = cms[k];
+	}
+
+	// 2. Vite import.meta.env
+	try {
+		const meta = import.meta.env as unknown as EnvMap;
+		for (const k of ENV_KEYS) {
+			if (!out[k] && meta[k]) out[k] = meta[k];
+		}
+	} catch {
+		/* ignore */
+	}
+
+	// 3. Node process.env
 	if (typeof process !== "undefined" && process.env) {
 		for (const k of ENV_KEYS) {
 			if (!out[k] && process.env[k]) out[k] = process.env[k];
 		}
 	}
+
+	// 4. Cloudflare Worker bindings
 	const cf = await loadCloudflareEnv();
 	for (const k of ENV_KEYS) {
 		const v = cf[k];
 		if (!out[k] && typeof v === "string" && v.length > 0) out[k] = v;
 	}
+
 	return out;
 }
 
 function isSmtpConfigured(env: EnvMap): boolean {
-	const host = env.SMTP_HOST;
-	const user = env.SMTP_USER;
-	const pass = env.SMTP_PASS;
+	const host = env.GOZZY_SMTP_SERVER || env.SMTP_HOST;
+	const user = env.GOZZY_SMTP_USERNAME || env.SMTP_USER;
+	const pass = env.GOZZY_SMTP_PASSWORD || env.SMTP_PASS;
 	return Boolean(host && user && pass);
 }
 
@@ -139,10 +196,10 @@ function captureDev(msg: EmailMessage, from: string | undefined, to: string | un
 /** Send email via Node.js SMTP transport (using nodemailer dynamic import) */
 async function sendViaSmtp(env: EnvMap, fromHeader: string, msg: EmailMessage, to: string): Promise<void> {
 	const nodemailer = await import("nodemailer");
-	const host = env.SMTP_HOST;
-	const port = Number(env.SMTP_PORT || "587");
-	const user = env.SMTP_USER;
-	const pass = env.SMTP_PASS;
+	const host = env.GOZZY_SMTP_SERVER || env.SMTP_HOST;
+	const port = Number(env.GOZZY_SMTP_PORT || env.SMTP_PORT || "587");
+	const user = env.GOZZY_SMTP_USERNAME || env.SMTP_USER;
+	const pass = env.GOZZY_SMTP_PASSWORD || env.SMTP_PASS;
 	const isSecure = env.SMTP_SECURE === "true" || port === 465;
 
 	const transporter = nodemailer.createTransport({
