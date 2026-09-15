@@ -194,6 +194,21 @@
 					"slug": "show_in_nav",
 					"label": "Show in Top Navigation Bar",
 					"type": "boolean"
+				},
+				{
+					"slug": "seo_title",
+					"label": "SEO Meta Title",
+					"type": "string"
+				},
+				{
+					"slug": "meta_description",
+					"label": "SEO Meta Description",
+					"type": "text"
+				},
+				{
+					"slug": "keywords",
+					"label": "SEO Keywords (Comma-separated)",
+					"type": "string"
 				}
 			]
 		},
@@ -581,6 +596,9 @@
 				"data": {
 					"title": "About Gozzy Autos",
 					"subtitle": "Your Trusted Partner for Quality Pre-Owned Vehicles",
+					"seo_title": "About Gozzy Autos — Quality Pre-Owned Vehicles Dealership",
+					"meta_description": "Learn about Gozzy Autos, your trusted partner for quality pre-owned vehicles. Multi-point inspections, transparent pricing, and hassle-free documentation.",
+					"keywords": "Gozzy Autos, pre-owned cars, about us, used car dealership, Mumbai auto hub",
 					"sections": [
 						{
 							"section_tag": "Trusted Dealership",
