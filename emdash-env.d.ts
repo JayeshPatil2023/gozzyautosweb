@@ -19,6 +19,19 @@ export interface CustomScript {
   terms?: Record<string, TaxonomyTerm[]>;
 }
 
+export interface FooterSetting {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  content?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
 export interface HomePage {
   id: string;
   slug: string | null;
@@ -117,6 +130,7 @@ export interface Vehicle {
 declare module "emdash" {
   interface EmDashCollections {
     custom_scripts: CustomScript;
+    footer_settings: FooterSetting;
     home_page: HomePage;
     pages: Page;
     site_configurations: SiteConfiguration;

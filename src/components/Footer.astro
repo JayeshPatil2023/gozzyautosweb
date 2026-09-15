@@ -1,45 +1,62 @@
 ---
+import { getEmDashEntry, getEmDashCollection } from "emdash";
+
+let footerHtml = "";
+
+try {
+	const { entry } = await getEmDashEntry("footer_settings" as any, "main");
+	if (entry?.data?.content && typeof entry.data.content === "string") {
+		footerHtml = entry.data.content;
+	} else {
+		const { entries } = await getEmDashCollection("footer_settings" as any);
+		if (entries && entries.length > 0 && entries[0].data?.content) {
+			footerHtml = String(entries[0].data.content);
+		}
+	}
+} catch (e) {
+	// Fallback to default static HTML if CMS data is unavailable
+}
 ---
 
-<!-- ── Footer ───────────────────────────────────────── -->
-<footer class="site-footer">
-	<div class="container">
-		<div class="footer-grid">
-			<!-- Brand -->
-			<div class="footer-brand">
-				<a href="/" class="site-logo" style="margin-bottom: 1rem;">
-					<span class="logo-icon">🚗</span>
-					<span class="logo-text">
-						<span class="logo-accent">Gozzy</span> Autos
-					</span>
-				</a>
-				<p>Your trusted partner for quality pre-owned vehicles. Find your perfect drive at the best price.</p>
+{footerHtml ? (
+	<Fragment set:html={footerHtml} />
+) : (
+	<footer class="site-footer">
+		<div class="container">
+			<div class="footer-grid">
+				<div class="footer-brand">
+					<a href="/" class="site-logo" style="margin-bottom: 1rem;">
+						<span class="logo-icon">🚗</span>
+						<span class="logo-text">
+							<span class="logo-accent">Gozzy</span> Autos
+						</span>
+					</a>
+					<p>Your trusted partner for quality pre-owned vehicles. Find your perfect drive at the best price.</p>
+				</div>
+
+				<div class="footer-col">
+					<h4>Quick Links</h4>
+					<ul>
+						<li><a href="/">Home</a></li>
+						<li><a href="/vehicles">Vehicles</a></li>
+						<li><a href="/about">About Us</a></li>
+					</ul>
+				</div>
+
+				<div class="footer-col">
+					<h4>Contact</h4>
+					<ul>
+						<li><a href="tel:+911234567890">+91 12345 67890</a></li>
+						<li><a href="mailto:info@gozzyautos.com">info@gozzyautos.com</a></li>
+						<li><span style="color: var(--color-text-subtle);">Mon–Sat, 10am–7pm</span></li>
+					</ul>
+				</div>
 			</div>
 
-			<!-- Quick Links -->
-			<div class="footer-col">
-				<h4>Quick Links</h4>
-				<ul>
-					<li><a href="/">Home</a></li>
-					<li><a href="/vehicles">Vehicles</a></li>
-					<li><a href="/about">About Us</a></li>
-				</ul>
-			</div>
-
-			<!-- Contact Info -->
-			<div class="footer-col">
-				<h4>Contact</h4>
-				<ul>
-					<li><a href="tel:+911234567890">+91 12345 67890</a></li>
-					<li><a href="mailto:info@gozzyautos.com">info@gozzyautos.com</a></li>
-					<li><span style="color: var(--color-text-subtle);">Mon–Sat, 10am–7pm</span></li>
-				</ul>
+			<div class="footer-bottom">
+				<span>© {new Date().getFullYear()} Gozzy Autos. All rights reserved.</span>
+				<span>Built with EmDash CMS</span>
 			</div>
 		</div>
-
-		<div class="footer-bottom">
-			<span>© {new Date().getFullYear()} Gozzy Autos. All rights reserved.</span>
-			<span>Built with EmDash CMS</span>
-		</div>
-	</div>
-</footer>
+	</footer>
+)}

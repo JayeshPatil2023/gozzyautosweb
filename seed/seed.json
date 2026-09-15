@@ -426,6 +426,28 @@
 					"type": "string"
 				}
 			]
+		},
+		{
+			"slug": "footer_settings",
+			"label": "Footer Settings",
+			"labelSingular": "Footer Settings",
+			"supports": [
+				"revisions"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Config Title",
+					"type": "string",
+					"required": true,
+					"searchable": true
+				},
+				{
+					"slug": "content",
+					"label": "Footer HTML Content",
+					"type": "text"
+				}
+			]
 		}
 	],
 	"menus": [
@@ -649,6 +671,17 @@
 					"email_provider": "auto",
 					"recaptcha_site_key": "",
 					"recaptcha_secret_key": ""
+				}
+			}
+		],
+		"footer_settings": [
+			{
+				"id": "footer-main",
+				"slug": "main",
+				"status": "published",
+				"data": {
+					"title": "Global Footer HTML Content",
+					"content": "<footer class=\"site-footer\">\n\t<div class=\"container\">\n\t\t<div class=\"footer-grid\">\n\t\t\t<!-- Brand -->\n\t\t\t<div class=\"footer-brand\">\n\t\t\t\t<a href=\"/\" class=\"site-logo\" style=\"margin-bottom: 1rem;\">\n\t\t\t\t\t<span class=\"logo-icon\">🚗</span>\n\t\t\t\t\t<span class=\"logo-text\">\n\t\t\t\t\t\t<span class=\"logo-accent\">Gozzy</span> Autos\n\t\t\t\t\t</span>\n\t\t\t\t</a>\n\t\t\t\t<p>Your trusted partner for quality pre-owned vehicles. Find your perfect drive at the best price.</p>\n\t\t\t</div>\n\n\t\t\t<!-- Quick Links -->\n\t\t\t<div class=\"footer-col\">\n\t\t\t\t<h4>Quick Links</h4>\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a href=\"/\">Home</a></li>\n\t\t\t\t\t<li><a href=\"/vehicles\">Vehicles</a></li>\n\t\t\t\t\t<li><a href=\"/about\">About Us</a></li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\n\t\t\t<!-- Contact Info -->\n\t\t\t<div class=\"footer-col\">\n\t\t\t\t<h4>Contact</h4>\n\t\t\t\t<ul>\n\t\t\t\t\t<li><a href=\"tel:+911234567890\">+91 12345 67890</a></li>\n\t\t\t\t\t<li><a href=\"mailto:info@gozzyautos.com\">info@gozzyautos.com</a></li>\n\t\t\t\t\t<li><span style=\"color: var(--color-text-subtle);\">Mon–Sat, 10am–7pm</span></li>\n\t\t\t\t</ul>\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"footer-bottom\">\n\t\t\t<span>© 2026 Gozzy Autos. All rights reserved.</span>\n\t\t\t<span>Built with EmDash CMS</span>\n\t\t</div>\n\t</div>\n</footer>"
 				}
 			}
 		]
