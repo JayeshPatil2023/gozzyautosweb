@@ -55,6 +55,7 @@ const currentPath = Astro.url.pathname;
 		{canonical && <link rel="canonical" href={canonical} />}
 		<EmDashHead page={pageCtx} />
 		<HeaderScripts />
+		<slot name="head" />
 	</head>
 	<body>
 		<EmDashBodyStart page={pageCtx} />
